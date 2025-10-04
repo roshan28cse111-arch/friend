@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ankita Friendship Game 💖</title>
+<style>
+:root{--accent:#ff2f63;--bg1:#fff0f5;--bg2:#ffe6f0;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:system-ui,sans-serif;background:linear-gradient(180deg,var(--bg1),var(--bg2));overflow-x:hidden;color:#222;}
+.header{padding:12px;background:linear-gradient(90deg,var(--accent),#ff7aa2);color:white;text-align:center;font-weight:bold;font-size:18px;}
+.container{max-width:960px;margin:12px auto;padding:12px;}
+.card{background:white;padding:16px;border-radius:12px;margin-bottom:16px;box-shadow:0 10px 30px rgba(0,0,0,0.08);}
+.center{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;}
+.big-title{font-size:20px;color:var(--accent);font-weight:700;animation:glow 1.5s infinite alternate;}
+@keyframes glow{from{text-shadow:0 0 6px rgba(255,47,99,0.8);}to{text-shadow:0 0 20px rgba(255,150,180,0.7);}}
+button{padding:10px 18px;border:none;border-radius:12px;font-weight:700;font-size:16px;cursor:pointer;}
+.yes{background:var(--accent);color:white;box-shadow:0 6px 20px rgba(255,47,99,0.2);}
+.no{background:#eee;color:#333;position:absolute;}
+.gift{width:180px;height:180px;background:linear-gradient(180deg,#ffccd9,#ff9db8);border-radius:12px;display:grid;place-items:center;cursor:pointer;position:relative;box-shadow:0 10px 30px rgba(220,30,90,0.15);}
+.gift .lid{width:100%;height:48px;background:#fff;border-top-left-radius:12px;border-top-right-radius:12px;position:absolute;top:0;left:0;transform-origin:center;transition:transform 0.5s ease;}
+.gift.open .lid{transform:rotateX(-75deg) translateY(-28px);}
+.teddy{font-size:64px;opacity:0;transform:translateY(30px);transition:all 0.6s ease;}
+.teddy.show{opacity:1;transform:translateY(0);}
+.rose-btn{width:180px;height:180px;background:radial-gradient(circle,#ff2f63,#ff7aa2);border-radius:50%;display:grid;place-items:center;font-size:56px;color:white;cursor:pointer;box-shadow:0 20px 50px rgba(220,30,90,0.2);}
+.effects{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:100;}
+.float{position:absolute;font-size:30px;animation:floatUp linear forwards;opacity:0;}
+@keyframes floatUp{from{transform:translateY(100vh) scale(1);opacity:1;}to{transform:translateY(-20vh) scale(1.5);opacity:0;}}
+.stage-img{max-width:80%;border-radius:12px;}
+.hidden{display:none;}
+</style>
+</head>
+<body>
+<div class="header">💖 Ankita Friendship Game 💖</div>
+<div class="container">
+
+<!-- Stage 1 -->
+<div class="card" id="stage1">
+  <div class="center">
+    <div class="big-title">Hi Ankita! Will you accept my friendship? 💕</div>
+    <img src="https://ih1.redbubble.net/image.2111662799.7067/st,small,507x507-pad,600x600,f8f8f8.jpg" class="stage-img" alt="cute sticker">
+    <div style="position:relative;height:80px;width:100%;">
+      <button class="yes" id="yes1">Yes 💖</button>
+      <button class="no" id="no1">No ❌</button>
+    </div>
+  </div>
+</div>
+
+<!-- Stage 2: Gift -->
+<div class="card hidden" id="stage2">
+  <div class="center">
+    <div class="big-title">You got a gift! Click the box 🎁</div>
+    <div class="gift" id="giftBox">
+      <div class="lid"></div>
+      <div class="teddy" id="teddy">🧸</div>
+    </div>
+    <div style="position:relative;height:80px;width:100%;">
+      <button class="yes" id="yes2">Accept Bike Ride? 🏍️</button>
+      <button class="no" id="no2">No ❌</button>
+    </div>
+  </div>
+</div>
+
+<!-- Stage 3: Bike Ride -->
+<div class="card hidden" id="stage3">
+  <div class="center">
+    <div class="big-title">Come on a Ladakh bike ride with me? 🏔️🏍️</div>
+    <img id="bikeSticker" class="stage-img" src="https://miro.medium.com/v2/resize:fit:1358/1*8Pt72wtBOeEeOEUnyaZfTw.jpeg" alt="bike sticker">
+    <div style="position:relative;height:80px;width:100%;">
+      <button class="yes" id="yes3">Yes 💫</button>
+      <button class="no" id="no3">No ❌</button>
+    </div>
+  </div>
+</div>
+
+<!-- Stage 4: Rose -->
+<div class="card hidden" id="stage4">
+  <div class="center">
+    <div class="big-title">A red rose for you 🌹</div>
+    <div class="rose-btn" id="roseBtn">🌹</div>
+    <div class="small">Click the rose to start celebration</div>
+  </div>
+</div>
+
+<!-- Final Celebration -->
+<div class="card hidden" id="finalStage">
+  <div class="center">
+    <div class="big-title">Celebrate! 🎉</div>
+    <div class="small">Floating hearts, roses & kisses for Ankita 💕</div>
+  </div>
+</div>
+
+<div class="effects" id="effects"></div>
+
+<script>
+// Floating animations
+function emitFloating(type,count=12){
+  const container=document.getElementById('effects');
+  const pool={heart:['❤️','💖','💕'],rose:['🌹'],kiss:['💋']};
+  for(let i=0;i<count;i++){
+    const el=document.createElement('div');
+    el.className='float';
+    el.style.left=(Math.random()*100)+'vw';
+    el.style.fontSize=(18+Math.random()*36)+'px';
+    el.textContent=pool[type][Math.floor(Math.random()*pool[type].length)];
+    el.style.animationDuration=(3+Math.random()*3)+'s';
+    container.appendChild(el);
+    setTimeout(()=>el.remove(),7000);
+  }
+}
+
+// No button runaway
+function makeRunaway(btn){
+  btn.addEventListener('mouseenter',()=>{
+    const vw=window.innerWidth, vh=window.innerHeight;
+    btn.style.position='absolute';
+    btn.style.left=Math.random()*(vw-100)+'px';
+    btn.style.top=(80+Math.random()*(vh-180))+'px';
+  });
+}
+
+// Game flow
+document.addEventListener('DOMContentLoaded',()=>{
+  const stage1=document.getElementById('stage1'),
+        stage2=document.getElementById('stage2'),
+        stage3=document.getElementById('stage3'),
+        stage4=document.getElementById('stage4'),
+        finalStage=document.getElementById('finalStage');
+
+  // Stage1
+  makeRunaway(document.getElementById('no1'));
+  document.getElementById('yes1').onclick=()=>{emitFloating('heart',24);stage1.classList.add('hidden');stage2.classList.remove('hidden');};
+
+  // Stage2 Gift
+  const gift=document.getElementById('giftBox'), teddy=document.getElementById('teddy');
+  gift.onclick=()=>{gift.classList.add('open');setTimeout(()=>{teddy.classList.add('show');emitFloating('heart',16);},400);};
+  makeRunaway(document.getElementById('no2'));
+  document.getElementById('yes2').onclick=()=>{emitFloating('rose',18);stage2.classList.add('hidden');stage3.classList.remove('hidden');};
+
+  // Stage3 Bike
+  makeRunaway(document.getElementById('no3'));
+  document.getElementById('yes3').onclick=()=>{emitFloating('rose',20);stage3.classList.add('hidden');stage4.classList.remove('hidden');};
+
+  // Stage4 Rose
+  document.getElementById('roseBtn').onclick=()=>{
+    for(let i=0;i<6;i++){setTimeout(()=>emitFloating('rose',24),i*300);setTimeout(()=>emitFloating('kiss',16),i*350);}
+    setTimeout(()=>{stage4.classList.add('hidden');finalStage.classList.remove('hidden');setInterval(()=>emitFloating('heart',6),1800);},2200);
+  };
+});
+</script>
+</body>
+</html> 
